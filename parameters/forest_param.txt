@@ -1,0 +1,17 @@
+is_use_depth 1
+max_frame_num 300
+sampler_num_per_frame 500
+
+tree_num 5
+max_depth 25
+max_balanced_depth 8
+min_leaf_node 1
+min_split_node_std_dev 0.1
+
+max_pixel_offset 131
+pixel_offset_candidate_num 20
+split_candidate_num 10
+wh_kernel_size 20
+
+verbose 0
+verbose_leaf 0

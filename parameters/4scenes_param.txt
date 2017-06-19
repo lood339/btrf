@@ -1,0 +1,7 @@
+depth_factor 1000.0
+k_focal_length_x 572.0
+k_focal_length_y 572.0
+k_camera_centre_u 320.0
+k_camera_centre_v 240.0
+min_depth 0.4
+max_depth 4
