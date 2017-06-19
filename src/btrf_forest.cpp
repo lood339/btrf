@@ -67,7 +67,7 @@ const DatasetParameter & BTRFForest::getDatasetParameter(void) const
 {
     return dataset_param_;
 }
-const BTRNDTree * BTRFForest::getTree(int index) const
+const BTRFForest::TreePtr BTRFForest::getTree(int index) const
 {
     assert(index >=0 && index < trees_.size());
     return trees_[index];
@@ -110,7 +110,7 @@ bool BTRFForest::saveModel(const char *file_name) const
         
         if (trees_[i]) {
             // 1. write tree structure
-            BTRNDTreeNode::writeTree(tree_file_name,
+            BTRFTreeNode::writeTree(tree_file_name,
                                      trees_[i]->root_,
                                      trees_[i]->leaf_node_num_,
                                      label_dim_);
@@ -176,15 +176,15 @@ bool BTRFForest::loadModel(const char *model_file_name)
     
     // read each tree
     for (int i = 0; i<treeFiles.size(); i++) {
-        BTRNDTreeNode * root = NULL;
+        BTRFTreeNode * root = NULL;
         int leaf_node_num = 0;
         
         // read tree structure
-        is_read = BTRNDTreeNode::readTree(treeFiles[i].c_str(), root, leaf_node_num);
+        is_read = BTRFTreeNode::readTree(treeFiles[i].c_str(), root, leaf_node_num);
         assert(is_read);
         assert(root);
         
-        BTRNDTree *tree = new BTRNDTree();
+        BTRFTree *tree = new BTRFTree();
         assert(tree);
         tree->root_ = root;
         tree->setTreeParameter(tree_param_);

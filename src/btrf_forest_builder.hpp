@@ -2,8 +2,8 @@
 //  Copyright (c) 2017 Nowhere Planet. All rights reserved.
 //
 
-#ifndef __bt_rnd_regressor_builder__
-#define __bt_rnd_regressor_builder__
+#ifndef __btrf_forest_builder__
+#define __btrf_forest_builder__
 
 #include <stdio.h>
 #include "btrf_forest.hpp"
@@ -13,16 +13,18 @@ class BTRFForestBuilder
 {
     typedef BTRFForest Forest;
     typedef SCRFRandomSample Feature;
+    typedef BTRFTreeParameter TreeParameter;
 private:
-    BTRNDTreeParameter tree_param_;
+    TreeParameter tree_param_;
     DatasetParameter dataset_param_;
     
-    typedef BTRNDTree TreeType;
+    typedef SCRFRandomSample FeatureType;
+    typedef BTRFTree TreeType;
     
 public:
     
     // before training: set tree and dataset parameters
-    void setTreeParameter(const BTRNDTreeParameter & param);
+    void setTreeParameter(const TreeParameter & param);
     void setDatasetParameter(const DatasetParameter & param);
 
     
@@ -61,7 +63,7 @@ public:
     
 private:
     // out of bag validation
-    bool EstimateValidataionError(const BTRNDTree & tree,
+    bool estimateValidataionError(const TreeType & tree,
                                   const vector<string> & rgb_img_files,
                                   const vector<string> & depth_img_files,
                                   const vector<string> & pose_files,
@@ -72,4 +74,4 @@ private:
 };
 
 
-#endif /* defined(__bt_rnd_regressor_builder__) */
+#endif /* defined(__btrf_forest_builder__) */

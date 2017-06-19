@@ -2,8 +2,8 @@
 //  Copyright (c) 2017 Nowhere Planet. All rights reserved.
 //
 
-#ifndef __RGBD_RF__bt_rnd_tree__
-#define __RGBD_RF__bt_rnd_tree__
+#ifndef __btrf_tree__
+#define __btrf_tree__
 
 // backtracking decision tree
 // a forest has multiple independent trees
@@ -24,9 +24,9 @@ using std::vector;
 using Eigen::VectorXf;
 using flann::BranchStruct;
 
-class BTRNDTreeNode;
+class BTRFTreeNode;
 
-class BTRNDTree
+class BTRFTree
 {
 private:
     friend class BTRFForest;
@@ -35,15 +35,16 @@ private:
     typedef Distance::ResultType DistanceType;
     typedef Distance::ElementType ElementType;
     
-    typedef BTRNDTreeNode Node;
-    typedef BTRNDTreeNode* NodePtr;
+    typedef BTRFTreeNode Node;
+    typedef BTRFTreeNode* NodePtr;
     typedef BranchStruct<NodePtr, DistanceType > BranchSt;
     typedef BranchSt* Branch;
     
     typedef SCRFRandomSample FeatureType;
+    typedef BTRFTreeParameter TreeParameter;
     
     NodePtr root_;    // tree root
-    BTRNDTreeParameter tree_param_; // tree parameter
+    TreeParameter tree_param_; // tree parameter
     
     Distance distance_;   // the distance functor
     int leaf_node_num_;   // total leaf node number
@@ -52,8 +53,8 @@ private:
     DTRandom rnd_generator_;   // random number generator
     
 public:
-    BTRNDTree();
-    ~BTRNDTree();
+    BTRFTree();
+    ~BTRFTree();
     
     // build a decision tree using training examples
     // features: sampled image pixel locations
@@ -65,7 +66,7 @@ public:
                    const vector<VectorXf> & labels,
                    const vector<unsigned int> & indices,
                    const vector<cv::Mat> & rgb_images,
-                   const BTRNDTreeParameter & param);
+                   const TreeParameter & param);
     
     // predict 3D locaiton of a pixel in an image
     // feature: input, testing feature location
@@ -86,8 +87,8 @@ public:
     void setLeafNodeDescriptor(const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data);
     
     // tree parameters
-    const BTRNDTreeParameter & getTreeParameter(void) const {return tree_param_;}
-    void setTreeParameter(const BTRNDTreeParameter & param) {tree_param_ = param;}
+    const TreeParameter & getTreeParameter(void) const {return tree_param_;}
+    void setTreeParameter(const TreeParameter & param) {tree_param_ = param;}
     
 private:
     // build tree implementation
@@ -165,4 +166,4 @@ private:
 };
 
 
-#endif /* defined(__RGBD_RF__bt_rnd_tree__) */
+#endif /* defined(__btrf_tree__) */

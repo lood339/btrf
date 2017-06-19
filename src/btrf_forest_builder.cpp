@@ -101,8 +101,8 @@ bool BTRFForestBuilder::buildModel(BTRFForest& model,
     model.tree_param_    = tree_param_;
     model.dataset_param_ = dataset_param_;
     
-    using FeatureType = SCRFRandomSample;
-    using TreeType = BTRNDTree;
+    
+   // using TreeType = BTRNDTree;
     // prepare data for training
     for (int n = 0; n<tree_num; n++){
         // Step 1: randomly sample training images
@@ -188,7 +188,7 @@ bool BTRFForestBuilder::buildModel(BTRFForest& model,
         }
         
         // validation error from a single tree
-        this->EstimateValidataionError(*tree, rgb_img_files, depth_img_files, pose_files, 10, max_check, 0.1);
+        this->estimateValidataionError(*tree, rgb_img_files, depth_img_files, pose_files, 10, max_check, 0.1);
         
         // delete current tree, save memory
         delete tree;
@@ -199,7 +199,7 @@ bool BTRFForestBuilder::buildModel(BTRFForest& model,
     return true;
 }
 
-bool BTRFForestBuilder::EstimateValidataionError(const BTRNDTree & tree,
+bool BTRFForestBuilder::estimateValidataionError(const TreeType & tree,
                                                      const vector<string> & rgb_img_files,
                                                      const vector<string> & depth_img_files,
                                                      const vector<string> & pose_files,
@@ -207,8 +207,8 @@ bool BTRFForestBuilder::EstimateValidataionError(const BTRNDTree & tree,
                                                      const int max_check,
                                                      const double error_threshold) const
 {
-    using FeatureType = SCRFRandomSample;
-    using TreeType = BTRNDTree;
+ //   using FeatureType = SCRFRandomSample;
+//    using TreeType = BTRNDTree;
     
     const int sample_per_frame = tree_param_.sampler_num_per_frame_;
     const bool is_use_depth = tree_param_.is_use_depth_;

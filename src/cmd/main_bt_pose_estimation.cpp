@@ -93,7 +93,7 @@ int main(int argc, const char * argv[])
         
         cv::Mat mask;
         cv::Mat camera_coordinate_position;
-        cv::Mat wld_coord = Ms7ScenesUtil::cameraDepthToWorldCoordinate(depth_img,
+        cv::Mat wld_coord = CvxCalib3D::cameraDepthToWorldCoordinate(depth_img,
                                                             camera_to_world_pose,
                                                             calibration_matrix,
                                                             depth_factor,

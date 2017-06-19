@@ -2,8 +2,8 @@
 //  Copyright (c) 2017 Nowhere Planet. All rights reserved.
 //
 
-#ifndef __RGBD_RF__bt_rnd_tree_node__
-#define __RGBD_RF__bt_rnd_tree_node__
+#ifndef __btrf_tree_node__
+#define __btrf_tree_node__
 
 // backtracking random tree node
 #include <stdio.h>
@@ -16,16 +16,16 @@ using std::vector;
 using Eigen::VectorXf;
 
 
-class BTRNDTreeNode
+class BTRFTreeNode
 {
-    friend class BTRNDTree;
+    friend class BTRFTree;
 private:
     
-    typedef BTRNDTreeNode* NodePtr;
+    typedef BTRFTreeNode* NodePtr;
     typedef RandomSplitParameter SplitParameter;
 
-    BTRNDTreeNode *left_child_;  // left child node
-    BTRNDTreeNode *right_child_; // right child node
+    NodePtr left_child_;  // left child node
+    NodePtr right_child_; // right child node
     int depth_;                  // tree depth from 0
     bool is_leaf_;               // indicator of leaf node
    
@@ -42,9 +42,9 @@ private:
     
 public:
     // constructor
-    BTRNDTreeNode(int depth);
+    BTRFTreeNode(int depth);
     // de-constructor, release memory
-    ~BTRNDTreeNode();
+    ~BTRFTreeNode();
     
     // write a node to a .txt file
     static bool writeTree(const char *file_name, const NodePtr root,
@@ -63,4 +63,4 @@ private:
 
 
 
-#endif /* defined(__RGBD_RF__bt_rnd_tree_node__) */
+#endif /* defined(__btrf_tree_node__) */

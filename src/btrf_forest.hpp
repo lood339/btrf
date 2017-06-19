@@ -6,8 +6,8 @@
 //  Copyright (c) 2017 Nowhere Planet. All rights reserved.
 //
 
-#ifndef __RGBD_RF__bt_rnd_regressor__
-#define __RGBD_RF__bt_rnd_regressor__
+#ifndef __btrf_forest__
+#define __btrf_forest__
 
 #include <stdio.h>
 #include <vector>
@@ -18,13 +18,14 @@ using std::vector;
 // a random forests
 class BTRFForest
 {
-    friend class BTRFForestBuilder;
+    friend class BTRFForestBuilder;   
     
-    typedef BTRNDTree *  TreePtr;
+    typedef BTRFTree *  TreePtr;
     typedef SCRFRandomSample FeatureType;
+    typedef BTRFTreeParameter  TreeParameter;
     
     vector<TreePtr> trees_;
-    BTRNDTreeParameter tree_param_;
+    TreeParameter tree_param_;
     DatasetParameter dataset_param_;    
    
     int label_dim_;   // label dimesion, for 3D location, it is 3
@@ -45,9 +46,9 @@ public:
                  vector<Eigen::VectorXf> & predictions,
                  vector<float> & dists) const;
     
-    const BTRNDTreeParameter & getTreeParameter(void) const;
+    const TreeParameter & getTreeParameter(void) const;
     const DatasetParameter & getDatasetParameter(void) const;
-    const BTRNDTree * getTree(int index) const;
+    const TreePtr getTree(int index) const;
     
     
     // save model to a .txt file
@@ -60,4 +61,4 @@ public:
 };
 
 
-#endif /* defined(__RGBD_RF__bt_rnd_regressor__) */
+#endif /* defined(__btrf_forest__) */

@@ -17,13 +17,13 @@
 using std::cout;
 using std::endl;
 
-BTRNDTree::BTRNDTree()
+BTRFTree::BTRFTree()
 {
     root_ = NULL;
     leaf_node_num_ = 0;    
 }
 
-BTRNDTree::~BTRNDTree()
+BTRFTree::~BTRFTree()
 {
     if (root_) {
         delete root_;
@@ -31,7 +31,7 @@ BTRNDTree::~BTRNDTree()
     }
 }
 
-bool BTRNDTree::buildTree(const vector<FeatureType> & features,
+bool BTRFTree::buildTree(const vector<FeatureType> & features,
                           const vector<VectorXf> & labels,
                           const vector<unsigned int> & indices,
                           const vector<cv::Mat> & rgb_images,
@@ -42,7 +42,7 @@ bool BTRNDTree::buildTree(const vector<FeatureType> & features,
     assert(labels.size() == features.size());
     
     // Step 1: build a tree
-    root_ = new BTRNDTreeNode(0);
+    root_ = new Node(0);
     tree_param_ = param;
     leaf_node_num_ = 0;
     this->buildTreeImpl(features, labels, rgb_images, indices, root_);
@@ -53,7 +53,7 @@ bool BTRNDTree::buildTree(const vector<FeatureType> & features,
     return true;
 }
 
-bool BTRNDTree::buildTreeImpl(const vector<FeatureType> & features,
+bool BTRFTree::buildTreeImpl(const vector<FeatureType> & features,
                               const vector<VectorXf> & labels,
                               const vector<cv::Mat> & rgb_images,
                               const vector<unsigned int> & indices,                              
@@ -120,7 +120,7 @@ bool BTRNDTree::buildTreeImpl(const vector<FeatureType> & features,
     return true;
 }
 
-double BTRNDTree::optimizeRandomFeature(const vector<FeatureType> & features,
+double BTRFTree::optimizeRandomFeature(const vector<FeatureType> & features,
                                         const vector<VectorXf> & labels,
                                         const vector<cv::Mat> & rgb_images,
                                         const vector<unsigned int> & indices,
@@ -164,7 +164,7 @@ double BTRNDTree::optimizeRandomFeature(const vector<FeatureType> & features,
     return min_loss;
 }
 
-double BTRNDTree::computeRandomFeature(const cv::Mat & rgb_image, const FeatureType * feat, const RandomSplitParameter & split)
+double BTRFTree::computeRandomFeature(const cv::Mat & rgb_image, const FeatureType * feat, const RandomSplitParameter & split)
 {
     Eigen::Vector2f p1 = feat->p2d_;
     Eigen::Vector2f p2 = feat->addOffset(split.offset_);
@@ -193,7 +193,7 @@ double BTRNDTree::computeRandomFeature(const cv::Mat & rgb_image, const FeatureT
 }
 
 double
-BTRNDTree::optimizeThreshold(const vector<FeatureType> & features,
+BTRFTree::optimizeThreshold(const vector<FeatureType> & features,
                                     const vector<VectorXf> & labels,
                                     const vector<cv::Mat> & rgb_images,
                                     const vector<unsigned int> & indices,
@@ -214,7 +214,7 @@ BTRNDTree::optimizeThreshold(const vector<FeatureType> & features,
         assert(index >= 0 && index < features.size());
         
         const FeatureType* smp = &(features[index]);  // avoid copy, use pointer
-        feature_values[i] = BTRNDTree::computeRandomFeature(rgb_images[smp->image_index_], smp, split_param);
+        feature_values[i] = BTRFTree::computeRandomFeature(rgb_images[smp->image_index_], smp, split_param);
     }
     
     double min_v = *std::min_element(feature_values.begin(), feature_values.end());
@@ -281,7 +281,7 @@ BTRNDTree::optimizeThreshold(const vector<FeatureType> & features,
 }
 
 
-bool BTRNDTree::setLeafNode(const vector<FeatureType> & features,
+bool BTRFTree::setLeafNode(const vector<FeatureType> & features,
                             const vector<VectorXf> & labels,
                             const vector<unsigned int> & indices,
                             NodePtr node)
@@ -309,7 +309,7 @@ bool BTRNDTree::setLeafNode(const vector<FeatureType> & features,
 }
 
 
-void BTRNDTree::hashLeafNode()
+void BTRFTree::hashLeafNode()
 {
     assert(leaf_node_num_ > 0);
     leaf_nodes_.resize(leaf_node_num_);
@@ -319,7 +319,7 @@ void BTRNDTree::hashLeafNode()
     this->recordLeafNodes(root_, leaf_nodes_, index);
 }
 
-void BTRNDTree::recordLeafNodes(NodePtr node, vector<NodePtr> & leafNodes, int & index)
+void BTRFTree::recordLeafNodes(NodePtr node, vector<NodePtr> & leafNodes, int & index)
 {
     assert(node);
     if (node->is_leaf_) {
@@ -340,7 +340,7 @@ void BTRNDTree::recordLeafNodes(NodePtr node, vector<NodePtr> & leafNodes, int &
     }
 }
 
-bool BTRNDTree::predict(const FeatureType & feature,
+bool BTRFTree::predict(const FeatureType & feature,
                         const cv::Mat & rgb_image,
                         const int max_check,
                         VectorXf & pred,
@@ -379,7 +379,7 @@ bool BTRNDTree::predict(const FeatureType & feature,
     return true;
 }
 
-void BTRNDTree::searchLevel(flann::ResultSet<DistanceType>  & result_set, const ElementType* vec, const NodePtr node,
+void BTRFTree::searchLevel(flann::ResultSet<DistanceType>  & result_set, const ElementType* vec, const NodePtr node,
                             int & check_count, const int max_check,
                             flann::Heap<BranchSt>* heap,
                             const FeatureType & feature,     // new added parameter
@@ -401,7 +401,7 @@ void BTRNDTree::searchLevel(flann::ResultSet<DistanceType>  & result_set, const 
     
     // Step 1: binary test
     // create a branch record for the branch not taken, use random feature
-    double rnd_feat = BTRNDTree::computeRandomFeature(rgb_image, &feature, node->split_param_);
+    double rnd_feat = BTRFTree::computeRandomFeature(rgb_image, &feature, node->split_param_);
     DistanceType diff = rnd_feat - node->split_param_.threshold_;
     NodePtr bestChild  = (diff < 0 ) ? node->left_child_: node->right_child_;
     NodePtr otherChild = (diff < 0 ) ? node->right_child_: node->left_child_;
@@ -418,7 +418,7 @@ void BTRNDTree::searchLevel(flann::ResultSet<DistanceType>  & result_set, const 
     this->searchLevel(result_set, vec, bestChild, check_count, max_check, heap, feature, rgb_image);
 }
 
-void BTRNDTree::getLeafNodeDescriptor(Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data)
+void BTRFTree::getLeafNodeDescriptor(Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data)
 {
     assert(root_);
     assert(leaf_node_num_ > 0);
@@ -433,7 +433,7 @@ void BTRNDTree::getLeafNodeDescriptor(Eigen::Matrix<float, Eigen::Dynamic, Eigen
     }
 }
 
-void BTRNDTree::setLeafNodeDescriptor(const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data)
+void BTRFTree::setLeafNodeDescriptor(const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data)
 {
     assert(root_);
     assert(leaf_node_num_ > 0);

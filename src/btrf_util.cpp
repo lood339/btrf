@@ -11,6 +11,7 @@
 #include "ms7scenes_util.hpp"
 #include "cvx_wht.hpp"
 #include "cvx_util.hpp"
+#include "cvx_calib3d.hpp"
 
 
 void
@@ -69,7 +70,7 @@ BTRNDUtil::randomSampleFromRgbdImagesImpl(const char * rgb_img_file,
     
     cv::Mat mask;
     cv::Mat camera_coordinate;
-    cv::Mat world_coordinate =  Ms7ScenesUtil::cameraDepthToWorldCoordinate(camera_depth_img, pose, calibration_matrix, depth_factor,
+    cv::Mat world_coordinate =  CvxCalib3D::cameraDepthToWorldCoordinate(camera_depth_img, pose, calibration_matrix, depth_factor,
                                                                             min_depth, max_depth, camera_coordinate, mask);
     
     for (int i = 0; i<num_sample; i++) {

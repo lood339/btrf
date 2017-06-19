@@ -22,86 +22,26 @@ using std::vector;
 class Ms7ScenesUtil
 {
 public:
-    // read camera pose file
+    // read camera pose from a .txt file
     static cv::Mat read_pose_7_scenes(const char *file_name);
     
-    //
-    static bool read_pose_7_scenes(const char *file_name, Eigen::Affine3d& affine);
-    
-    // invalid depth is 0.0
-    static cv::Mat camera_depth_to_world_depth(const cv::Mat & camera_depth_img, const cv::Mat & pose);
-        
-    // camera_depth_img 16 bit
-    // return CV_64_FC3 for x, y, z, unit in meter
-    static cv::Mat camera_depth_to_world_coordinate(const cv::Mat & camera_depth_img, const cv::Mat & camera_to_world_pose);
-    
-    // mask: CV_8UC1 0 --> invalid sample
-    static cv::Mat camera_depth_to_world_coordinate(const cv::Mat & camera_depth_img,
-                                                    const cv::Mat & camera_to_world_pose,
-                                                    cv::Mat & mask);
-    // mask: CV_8UC1 0 --> invalid sample
-    static cv::Mat camera_depth_to_camera_coordinate(const cv::Mat & camera_depth_img,                                                    
-                                                     cv::Mat & mask);
-    // mask: CV_8UC1 0 --> invalid sample
-    // return CV_64_FC3 for x, y, z, unit in meter
-    static void camera_depth_to_camera_and_world_coordinate(const cv::Mat & camera_depth,
-                                                            const cv::Mat & camera_to_world_pose,
-                                                            cv::Mat & camera_coord,
-                                                            cv::Mat & world_coord,
-                                                            cv::Mat & mask);
-    
-    // camera_depth_img: CV_64FC1
-    // camera_to_world_pose: 4x4 CV_64FC1
-    // calibration_matrix: 3x3 CV_64FC1
-    // depth_factor: e.g. 1000.0 for MS 7 scenes
-    // camera_xyz: output camera coordinate location, CV_64FC3
-    // mask: output CV_8UC1 0 -- > invalid, 1 --> valid
-    // return: CV_64FC3 , x y z in world coordinate
-    static cv::Mat cameraDepthToWorldCoordinate(const cv::Mat & camera_depth_img,
-                                                const cv::Mat & camera_to_world_pose,
-                                                const cv::Mat & calibration_matrix,
-                                                const double depth_factor,
-                                                const double min_depth,
-                                                const double max_depth,
-                                                cv::Mat & camera_coordinate,
-                                                cv::Mat & mask);
-   
-    static cv::Mat camera_matrix();
-    
-    
-    static inline int invalid_camera_depth(){return 65535;}
-    
-    static bool load_prediction_result(const char *file_name, string & rgb_img_file, string & depth_img_file, string & camera_pose_file,
-                                       vector<cv::Point2d> & img_pts,
-                                       vector<cv::Point3d> & wld_pts_pred,
-                                       vector<cv::Point3d> & wld_pts_gt);
-    
-   
-    
-  
-    
     // load prediction result form all decision trees with feature distance information
+    // file_name: name of a .txt file
+    // rgb_img_file, depth_img_file: RGB and depth image file name
+    // camera_pose_file: ground truth camera pose file name
+    // img_pts: sampled location in image space
+    // gt_wld_pts: world coordinate ground truth location
+    // pred_wld_pts: predicted world coordinate from random forest
+    // feature_dists: feature distance of predicted world coordinate, auxiliary data
     static bool load_prediction_result_with_distance(const char *file_name,
                                                      string & rgb_img_file,
                                                      string & depth_img_file,
                                                      string & camera_pose_file,
                                                      vector<cv::Point2d> & img_pts,
-                                                     vector<cv::Point3d> & wld_pts_gt,
-                                                     vector<vector<cv::Point3d> > & candidate_wld_pts_pred,
-                                                     vector<vector<double> > & candidate_feature_dists);
-    
-    
-                                                  
-    
-    // load camera estimation result
-    static bool load_estimated_camera_pose(const char *file_name,
-                                           string & rgb_img_file,
-                                           string & depth_img_file,
-                                           string & camera_pose_file,
-                                           cv::Mat & estimated_pose);
-    
-    // read file names in a file
-    static vector<string> read_file_names(const char *file_name);   
+                                                     vector<cv::Point3d> & gt_wld_pts,
+                                                     vector<vector<cv::Point3d> > & pred_wld_pts,
+                                                     vector<vector<double> > & feature_dists);
+      
     
 };
 

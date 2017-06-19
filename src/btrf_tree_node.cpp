@@ -8,7 +8,7 @@
 
 #include "btrf_tree_node.hpp"
 
-BTRNDTreeNode::BTRNDTreeNode(int depth)
+BTRFTreeNode::BTRFTreeNode(int depth)
 {
     left_child_ = NULL;
     right_child_ = NULL;
@@ -17,7 +17,7 @@ BTRNDTreeNode::BTRNDTreeNode(int depth)
     index_ = -1;
 }
 
-BTRNDTreeNode::~BTRNDTreeNode()
+BTRFTreeNode::~BTRFTreeNode()
 {
     if (left_child_) {
         delete left_child_;
@@ -29,7 +29,7 @@ BTRNDTreeNode::~BTRNDTreeNode()
     }
 }
 
-void BTRNDTreeNode::writeNode(FILE *pf, const NodePtr node)
+void BTRFTreeNode::writeNode(FILE *pf, const NodePtr node)
 {
     if (!node) {
         // empty node, end of a tree branch,
@@ -38,7 +38,7 @@ void BTRNDTreeNode::writeNode(FILE *pf, const NodePtr node)
     }
     
     // write current node split parameter
-    BTRNDTreeNode::SplitParameter param = node->split_param_;
+    BTRFTreeNode::SplitParameter param = node->split_param_;
     fprintf(pf, "%2d\t %d\t %2d\t %2d\t %lf\t %lf\t %lf\n",
             node->depth_, (int)node->is_leaf_, param.split_channles_[0], param.split_channles_[1],
             param.offset_[0], param.offset_[1],
@@ -59,11 +59,11 @@ void BTRNDTreeNode::writeNode(FILE *pf, const NodePtr node)
     }
     
     // recursively write left and wright child node
-    BTRNDTreeNode::writeNode(pf, node->left_child_);
-    BTRNDTreeNode::writeNode(pf, node->right_child_);
+    BTRFTreeNode::writeNode(pf, node->left_child_);
+    BTRFTreeNode::writeNode(pf, node->right_child_);
 }
 
-bool BTRNDTreeNode::writeTree(const char *fileName, const NodePtr root,
+bool BTRFTreeNode::writeTree(const char *fileName, const NodePtr root,
                               const int n_leaf_node, const int label_dim)
 {
     
@@ -75,12 +75,12 @@ bool BTRNDTreeNode::writeTree(const char *fileName, const NodePtr root,
     }
     fprintf(pf, "%d\t %d\n", n_leaf_node, label_dim);
     fprintf(pf, "depth\t isLeaf\t c1\t c2\t offset_x\t offset_y\t threshold\t mean\t stddev\n");
-    BTRNDTreeNode::writeNode(pf, root);
+    BTRFTreeNode::writeNode(pf, root);
     fclose(pf);
     return true;
 }
 
-bool BTRNDTreeNode::readTree(const char *fileName, NodePtr & root,
+bool BTRFTreeNode::readTree(const char *fileName, NodePtr & root,
                              int & leafNodeNum)
 {
     FILE *pf = fopen(fileName, "r");
@@ -100,12 +100,12 @@ bool BTRNDTreeNode::readTree(const char *fileName, NodePtr & root,
     fgets(line_buf, sizeof(line_buf), pf);
     printf("%s\n", line_buf);
     
-    BTRNDTreeNode::readNode(pf, root, label_dim);
+    BTRFTreeNode::readNode(pf, root, label_dim);
     fclose(pf);
     return true;
 }
 
-void BTRNDTreeNode::readNode(FILE *pf, NodePtr & node, const int label_dim)
+void BTRFTreeNode::readNode(FILE *pf, NodePtr & node, const int label_dim)
 {
     char lineBuf[1024] = {NULL};
     char *ret = fgets(lineBuf, sizeof(lineBuf), pf);
@@ -120,7 +120,7 @@ void BTRNDTreeNode::readNode(FILE *pf, NodePtr & node, const int label_dim)
     }
     
     // read node parameters
-    node = new BTRNDTreeNode(0);
+    node = new BTRFTreeNode(0);
     assert(node);
     int depth = 0;
     int is_leaf = 0;
@@ -136,7 +136,7 @@ void BTRNDTreeNode::readNode(FILE *pf, NodePtr & node, const int label_dim)
     node->depth_ = depth;
     node->is_leaf_ = is_leaf;
     
-    BTRNDTreeNode::SplitParameter& param = node->split_param_;
+    BTRFTreeNode::SplitParameter& param = node->split_param_;
     param.split_channles_[0] = c1;
     param.split_channles_[1] = c2;
     param.offset_ = Eigen::Vector2f(offset_x, offset_y);
@@ -168,8 +168,8 @@ void BTRNDTreeNode::readNode(FILE *pf, NodePtr & node, const int label_dim)
         node->index_ = index;
     }
     
-    BTRNDTreeNode::readNode(pf, node->left_child_, label_dim);
-    BTRNDTreeNode::readNode(pf, node->right_child_, label_dim);
+    BTRFTreeNode::readNode(pf, node->left_child_, label_dim);
+    BTRFTreeNode::readNode(pf, node->right_child_, label_dim);
 }
 
 

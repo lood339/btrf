@@ -15,9 +15,6 @@ using std::string;
 class CvxUtil
 {
 public:
-    // generate random number in the range of [min_val, max_val]
-    static vector<double>
-    generateRandomNumbers(double min_val, double max_val, int rnd_num);    
     
     static inline bool isInside(const int width, const int height, const int x, const int y)
     {
@@ -48,14 +45,6 @@ public:
         
         return idx;
     }
-    
-    // video input/ output
-    static double millisecondsFromIndex(const int index, const double fps)
-    {
-        return index * 1000.0/fps;
-    }
-    
-
     
 };
 

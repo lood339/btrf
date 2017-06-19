@@ -33,8 +33,7 @@ public:
    
     
     // dir_name = "/Users/jimmy/*.txt"
-    static vector<string> read_files(const char *dir_name);
-    
+    static vector<string> read_files(const char *dir_name);    
     // in the file: there is a list of strings
     static vector<string> read_file_names(const char *file_name);
     

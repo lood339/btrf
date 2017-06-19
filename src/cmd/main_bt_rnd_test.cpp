@@ -56,9 +56,9 @@ int main(int argc, const char * argv[])
      */
     
     
-    vector<string> rgb_files   = Ms7ScenesUtil::read_file_names(rgb_image_file);
-    vector<string> depth_files = Ms7ScenesUtil::read_file_names(depth_image_file);
-    vector<string> pose_files  = Ms7ScenesUtil::read_file_names(camera_to_wld_pose_file);
+    vector<string> rgb_files   = CvxIO::read_file_names(rgb_image_file);
+    vector<string> depth_files = CvxIO::read_file_names(depth_image_file);
+    vector<string> pose_files  = CvxIO::read_file_names(camera_to_wld_pose_file);
     
     assert(rgb_files.size() == depth_files.size());
     assert(rgb_files.size() == pose_files.size());
