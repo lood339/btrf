@@ -32,7 +32,7 @@ src/Walsh_Hadamard: Walsh hardamard transformation. Code modifed from : http://w
 
 src/yael_io.*: code for binary matrix read/write. Code modifed from: https://gforge.inria.fr/projects/yael
 
-parameters/4scenes_param.txt: dataset parameter
+parameters/4scenes_param.txt: dataset parameter, from http://graphics.stanford.edu/projects/reloc/ 
 parameters/forest_param.txt: forest parameter example. 
 parameters/apt1_kitchen/  : training/testing file sequence examples 
 
