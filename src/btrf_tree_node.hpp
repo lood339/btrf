@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <vector>
 #include <Eigen/Dense>
-#include "btrf_util.h"
+#include "btrf_util.hpp"
 
 
 using std::vector;

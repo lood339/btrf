@@ -6,7 +6,7 @@
 //  Copyright (c) 2017 Nowhere Planet. All rights reserved.
 //
 
-#include "btrf_tree_node.h"
+#include "btrf_tree_node.hpp"
 
 BTRNDTreeNode::BTRNDTreeNode(int depth)
 {

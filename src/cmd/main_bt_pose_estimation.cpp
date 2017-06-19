@@ -13,7 +13,7 @@
 #include "cvx_io.hpp"
 #include "cvx_pose_estimation.hpp"
 #include "ms7scenes_util.hpp"
-#include "dataset_param.h"
+#include "dataset_param.hpp"
 
 
 using namespace::std;

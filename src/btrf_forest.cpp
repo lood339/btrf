@@ -6,10 +6,10 @@
 //  Copyright (c) 2017 Nowhere Planet. All rights reserved.
 //
 
-#include "btrf_forest.h"
-#include "btrf_tree.h"
-#include "yael_io.h"
-#include "btrf_tree_node.h"
+#include "btrf_forest.hpp"
+#include "btrf_tree.hpp"
+#include "yael_io.hpp"
+#include "btrf_tree_node.hpp"
 #include "cvx_util.hpp"
 
 

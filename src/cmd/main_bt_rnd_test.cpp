@@ -12,12 +12,12 @@
 #include "cvx_io.hpp"
 #include <unordered_map>
 #include "ms7scenes_util.hpp"
-#include "btrf_forest_builder.h"
-#include "btrf_forest.h"
+#include "btrf_forest_builder.hpp"
+#include "btrf_forest.hpp"
 
 using std::string;
 
-#if 0
+#if 1
 
 static void help()
 {
@@ -29,7 +29,6 @@ static void help()
 
 int main(int argc, const char * argv[])
 {
-    /*
     if (argc != 8) {
         printf("argc is %d, should be 8\n", argc);
         help();
@@ -45,7 +44,8 @@ int main(int argc, const char * argv[])
     const char * prefix = argv[7];
     
     assert(num_random_sample > 100);
-     */
+     
+    /*
     const char * model_file = "/Users/jimmy/Desktop/IROS_app/model/kitchen_model.txt";
     const char * rgb_image_file = "/Users/jimmy/Desktop/IROS_app/apt1/kitchen/test_files/rgb_image_list.txt";
     const char * depth_image_file = "/Users/jimmy/Desktop/IROS_app/apt1/kitchen/test_files/depth_image_list.txt";
@@ -53,6 +53,7 @@ int main(int argc, const char * argv[])
     const int num_random_sample = 5000;
     const int max_check = 16;
     const char * prefix = "temp";
+     */
     
     
     vector<string> rgb_files   = Ms7ScenesUtil::read_file_names(rgb_image_file);
@@ -63,7 +64,7 @@ int main(int argc, const char * argv[])
     assert(rgb_files.size() == pose_files.size());
     
     // read model
-    BTRNDRegressor model;
+    BTRFForest model;
     bool is_read = model.loadModel(model_file);
     if (!is_read) {
         printf("Error: can not read from file %s\n", model_file);

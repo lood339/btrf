@@ -16,8 +16,8 @@
 // Eigen
 #include <Eigen/Dense>
 
-#include "btrf_util.h"
-#include "dt_random.h"
+#include "btrf_util.hpp"
+#include "dt_random.hpp"
 
 
 using std::vector;

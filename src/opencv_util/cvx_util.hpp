@@ -1,7 +1,3 @@
-//
-//  cvx_util.hpp
-//  RGB_RF
-//
 //  Created by jimmy on 2016-05-27.
 //  Copyright © 2016 jimmy. All rights reserved.
 //

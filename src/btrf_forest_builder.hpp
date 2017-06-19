@@ -6,8 +6,8 @@
 #define __bt_rnd_regressor_builder__
 
 #include <stdio.h>
-#include "btrf_forest.h"
-#include "btrf_util.h"
+#include "btrf_forest.hpp"
+#include "btrf_util.hpp"
 
 class BTRFForestBuilder
 {

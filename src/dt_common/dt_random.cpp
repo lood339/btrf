@@ -6,7 +6,7 @@
 //  Copyright (c) 2016 Nowhere Planet. All rights reserved.
 //
 
-#include "dt_random.h"
+#include "dt_random.hpp"
 #include "vnl_random.h"
 #include <cassert>
 

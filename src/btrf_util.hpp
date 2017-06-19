@@ -10,7 +10,7 @@
 #include <vector>
 #include <opencv2/core/core.hpp>
 #include <opencv2/core/core_c.h>
-#include "dataset_param.h"
+#include "dataset_param.hpp"
 
 using Eigen::VectorXf;
 using std::vector;

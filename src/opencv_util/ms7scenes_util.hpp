@@ -76,27 +76,9 @@ public:
                                        vector<cv::Point3d> & wld_pts_pred,
                                        vector<cv::Point3d> & wld_pts_gt);
     
-    // load prediction result from decision trees with color information
-    static bool load_prediction_result_with_color(const char *file_name,
-                                                  string & rgb_img_file,
-                                                  string & depth_img_file,
-                                                  string & camera_pose_file,
-                                                  vector<cv::Point2d> & img_pts,
-                                                  vector<cv::Point3d> & wld_pts_pred,
-                                                  vector<cv::Point3d> & wld_pts_gt,
-                                                  vector<cv::Vec3d> & color_pred,
-                                                  vector<cv::Vec3d> & color_sample);
+   
     
-    // load prediction result from all decision trees with color information
-    static bool load_prediction_result_with_color(const char *file_name,
-                                                  string & rgb_img_file,
-                                                  string & depth_img_file,
-                                                  string & camera_pose_file,
-                                                  vector<cv::Point2d> & img_pts,
-                                                  vector<cv::Point3d> & wld_pts_gt,
-                                                  vector<vector<cv::Point3d> > & candidate_wld_pts_pred,
-                                                  vector<cv::Vec3d> & color_sample,
-                                                  vector<vector<cv::Vec3d> > & candidate_color_pred);
+  
     
     // load prediction result form all decision trees with feature distance information
     static bool load_prediction_result_with_distance(const char *file_name,
@@ -108,16 +90,7 @@ public:
                                                      vector<vector<cv::Point3d> > & candidate_wld_pts_pred,
                                                      vector<vector<double> > & candidate_feature_dists);
     
-    // load prediction result from all decision trees with feature distance and uncertainty
-    static bool load_prediction_result_with_uncertainty(const char *file_name,
-                                                        string & rgb_img_file,
-                                                        string & depth_img_file,
-                                                        string & camera_pose_file,
-                                                        vector<Eigen::Vector2d> & img_pts,
-                                                        vector<Eigen::Vector3d> & wld_pts_gt,
-                                                        vector<vector<Eigen::Vector3d> > & candidate_wld_pts_pred,
-                                                        vector<vector<Eigen::Matrix3d> > & candidate_wld_pts_pred_covariance,
-                                                        vector<vector<double> > & candidate_feature_dists);
+    
                                                   
     
     // load camera estimation result

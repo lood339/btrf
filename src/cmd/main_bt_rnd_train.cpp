@@ -4,17 +4,17 @@
 
 #include <stdio.h>
 #include <iostream>
-#include "cvx_image_310.hpp"
 #include <string>
+#include "cvx_image_310.hpp"
 #include "cvx_io.hpp"
 #include "ms7scenes_util.hpp"
-#include "btrf_forest_builder.h"
-#include "btrf_forest.h"
-#include "dataset_param.h"
+#include "btrf_forest_builder.hpp"
+#include "btrf_forest.hpp"
+#include "dataset_param.hpp"
 
 using std::string;
 
-#if 1
+#if 0
 
 static void help()
 {

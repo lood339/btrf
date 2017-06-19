@@ -7,7 +7,7 @@
 //
 
 #include <stdio.h>
-#include "yael_io.h"
+#include "yael_io.hpp"
 
 
 static long xvecs_fsize(long unitsize, const char * fname, int *d_out, int *n_out)

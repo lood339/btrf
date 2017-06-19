@@ -6,11 +6,11 @@
 //  Copyright (c) 2017 Nowhere Planet. All rights reserved.
 //
 
-#include "btrf_tree.h"
-#include "btrf_tree_node.h"
-#include "dt_random.h"
+#include "btrf_tree.hpp"
+#include "btrf_tree_node.hpp"
+#include "dt_random.hpp"
 #include "cvx_util.hpp"
-#include "dt_util.h"
+#include "dt_util.hpp"
 #include <iostream>
 
 

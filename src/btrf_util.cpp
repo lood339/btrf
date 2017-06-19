@@ -6,10 +6,10 @@
 //  Copyright (c) 2017 Nowhere Planet. All rights reserved.
 //
 
-#include "btrf_util.h"
+#include "btrf_util.hpp"
 #include "cvx_io.hpp"
 #include "ms7scenes_util.hpp"
-#include "cvxWalshHadamard.h"
+#include "cvx_wht.hpp"
 #include "cvx_util.hpp"
 
 
@@ -122,7 +122,7 @@ BTRNDUtil::extractWHFeatureFromRgbImages(const char * rgb_img_file,
     CvxIO::imread_rgb_8u(rgb_img_file, rgb_img);
     
     vector<Eigen::VectorXf> local_features;
-    CvxWalshHadamard::generateWHFeatureWithoutFirstPattern(rgb_img, locations, 64, single_channel_dim, local_features);
+    CvxWalshHadamardTransform::generateWHFeatureWithoutFirstPattern(rgb_img, locations, 64, single_channel_dim, local_features);
     
     assert(local_features.size() == locations.size());
     

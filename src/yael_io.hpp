@@ -23,12 +23,16 @@ class YaelIO
 public:
     // n: number
     // d: dimension
-    static bool read_fvecs_file(const char *file_name, Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data);
-    static bool read_ivecs_file(const char *file_name, Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data);
+    static bool read_fvecs_file(const char *file_name,
+                                Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data);
+    static bool read_ivecs_file(const char *file_name,
+                                Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data);
     
     // .fvecs
-    static bool write_fvecs_file(const char *file_name, const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data);
-    static bool write_ivecs_file(const char *file_name, const Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data);
+    static bool write_fvecs_file(const char *file_name,
+                                 const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data);
+    static bool write_ivecs_file(const char *file_name,
+                                 const Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> & data);
     
 private:
     static float *fvec_new (long n);

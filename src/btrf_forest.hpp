@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include <vector>
-#include "btrf_tree.h"
+#include "btrf_tree.hpp"
 
 using std::vector;
 

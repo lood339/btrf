@@ -7,9 +7,9 @@
 //
 
 #include <iostream>
-#include "btrf_forest_builder.h"
-#include "dt_random.h"
-#include "dt_util.h"
+#include "btrf_forest_builder.hpp"
+#include "dt_random.hpp"
+#include "dt_util.hpp"
 #include "cvx_io.hpp"
 
 using std::cout;

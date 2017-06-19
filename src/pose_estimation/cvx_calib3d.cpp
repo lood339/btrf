@@ -7,7 +7,7 @@
 //
 
 #include "cvx_calib3d.hpp"
-#include "Kabsch.h"
+#include "Kabsch.hpp"
 #include <opencv2/calib3d/calib3d.hpp>
 
 using cv::Mat;
@@ -69,28 +69,6 @@ Eigen::Affine3d CvxCalib3D::KabschTransform(const vector<Eigen::Vector3d> & src,
     return affine;
 }
 
-bool CvxCalib3D::EPnPL(const vector<cv::Point2d> & img_pts, const vector<cv::Point3d> & wld_pts,
-                       const vector<cv::Point2d> & img_line_end_pts, const vector<cv::Point3d> & wld_line_end_pts,
-                       const cv::Mat& camera_matrix, const cv::Mat& distortion_coeff,
-                       const cv::Mat& init_rvec, const cv::Mat& init_tvec,
-                       cv::Mat& final_rvec, cv::Mat& final_tvec)
-{
-    assert(img_pts.size() == wld_pts.size());
-    assert(img_line_end_pts.size() == wld_line_end_pts.size());
-   
-    // change point on line constraint to point to point constraint
-    vector<cv::Point2d> all_img_pts;
-    vector<cv::Point3d> all_wld_pts;
-    all_img_pts.insert(all_img_pts.end(), img_pts.begin(), img_pts.end());
-    all_img_pts.insert(all_img_pts.end(), img_line_end_pts.begin(), img_line_end_pts.end());
-    all_wld_pts.insert(all_wld_pts.end(), wld_pts.begin(), wld_pts.end());
-    all_wld_pts.insert(all_wld_pts.end(), wld_line_end_pts.begin(), wld_line_end_pts.end());  
-    
-    init_rvec.copyTo(final_rvec);
-    init_tvec.copyTo(final_tvec);
-    bool is_solved = cv::solvePnP(Mat(all_wld_pts), Mat(all_img_pts), camera_matrix, distortion_coeff, final_rvec, final_tvec, true, CV_EPNP);
-    return is_solved;
-}
 
 void CvxCalib3D::KabschTransform(const vector<cv::Point3d> & src, const vector<cv::Point3d> & dst,
                                  const vector<cv::Point3d> & line_end_src, const vector<cv::Point3d> & line_end_dst,

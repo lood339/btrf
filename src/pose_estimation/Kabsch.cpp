@@ -2,7 +2,7 @@
 // https://github.com/oleg-alexandrov/projects/blob/master/eigen/Kabsch.cpp
 
 #include <Eigen/Geometry>
-#include "Kabsch.h"
+#include "Kabsch.hpp"
 // Given two sets of 3D points, find the rotation + translation + scale
 // which best maps the first set to the second.
 // Source: http://en.wikipedia.org/wiki/Kabsch_algorithm

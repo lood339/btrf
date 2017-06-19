@@ -6,7 +6,7 @@
 //  Copyright (c) 2017 Nowhere Planet. All rights reserved.
 //
 
-#include "dt_util.h"
+#include "dt_util.hpp"
 #include <Eigen/QR>
 #include <iostream>
 

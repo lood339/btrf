@@ -35,13 +35,7 @@ public:
                                 const vector<cv::Point3d> & line_end_src, const vector<cv::Point3d> & line_end_dst,
                                 cv::Mat & affine);
     
-    // approximate EPnPL: accurate and linear time pose estimation from points and lines
-    static bool EPnPL(const vector<cv::Point2d> & img_pts, const vector<cv::Point3d> & wld_pts,
-                      const vector<cv::Point2d> & img_line_end_pts, const vector<cv::Point3d> & wld_line_end_pts,
-                      const cv::Mat& camera_matrix, const cv::Mat& distortion_coeff,
-                      const cv::Mat& init_rvec, const cv::Mat& init_tvec,
-                      cv::Mat& final_rvec, cv::Mat& final_tvec);
-    
+       
     
         
     

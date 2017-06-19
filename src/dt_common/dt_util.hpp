@@ -20,7 +20,6 @@ using std::vector;
 using std::string;
 using Eigen::VectorXf;
 using Eigen::VectorXd;
-
 using std::vector;
 
 class DTUtil
