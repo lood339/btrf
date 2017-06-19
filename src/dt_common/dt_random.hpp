@@ -5,6 +5,8 @@
 #ifndef __Classifer_RF__DTRandom__
 #define __Classifer_RF__DTRandom__
 
+// generate random numbers
+
 #include <stdio.h>
 #include <vector>
 
@@ -22,8 +24,6 @@ public:
     double getRandomNumber(const double min_v, const double max_v) const;
     
     vector<double> getRandomNumbers(const double min_v, const double max_v, int num) const;
-    
-    
     
 public:
     // out of bagging sampling, the random number generator is related to the machine time

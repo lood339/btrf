@@ -2,8 +2,8 @@
 //  Copyright © 2016 jimmy. All rights reserved.
 //
 
-#ifndef cvx_io_cpp
-#define cvx_io_cpp
+#ifndef __cvx_io__
+#define __cvx_io__
 
 // read/write images
 #include <stdio.h>
@@ -40,4 +40,4 @@ public:
 };
 
 
-#endif /* cvxIO_cpp */
+#endif /* __cvx_io__ */

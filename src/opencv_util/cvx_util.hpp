@@ -2,8 +2,8 @@
 //  Copyright © 2016 jimmy. All rights reserved.
 //
 
-#ifndef cvx_util_cpp
-#define cvx_util_cpp
+#ifndef __cvx_util__
+#define __cvx_util__
 
 #include <stdio.h>
 #include <vector>
@@ -49,4 +49,4 @@ public:
 };
 
 
-#endif /* cvxUtil_cpp */
+#endif /* __cvx_util__ */

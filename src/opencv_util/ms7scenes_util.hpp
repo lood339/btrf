@@ -2,8 +2,8 @@
 //  Copyright © 2016 jimmy. All rights reserved.
 //
 
-#ifndef ms7ScenesUtil_cpp
-#define ms7ScenesUtil_cpp
+#ifndef __ms7scenes_util__
+#define __ms7scenes_util__
 
 #include <stdio.h>
 #include <opencv2/core/core.hpp>
@@ -19,6 +19,7 @@
 using std::string;
 using std::vector;
 
+// read/load ground truth or prediction data
 class Ms7ScenesUtil
 {
 public:
@@ -41,8 +42,7 @@ public:
                                                      vector<cv::Point3d> & gt_wld_pts,
                                                      vector<vector<cv::Point3d> > & pred_wld_pts,
                                                      vector<vector<double> > & feature_dists);
-      
     
 };
 
-#endif /* ms_7scenes_util_cpp */
+#endif /* __ms7scenes_util__ */

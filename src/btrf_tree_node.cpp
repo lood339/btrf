@@ -93,7 +93,7 @@ bool BTRFTreeNode::readTree(const char *fileName, NodePtr & root,
     // and remove ending '\n'
     int label_dim = 0;
     int ret = fscanf(pf, "%d %d \n", &leafNodeNum, &label_dim);
-    assert(ret == 1);
+    assert(ret == 2);
     
     //read marking line,
     char line_buf[1024] = {NULL};

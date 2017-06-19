@@ -15,7 +15,7 @@
 
 
 void
-BTRNDUtil::randomSampleFromRgbdImages(const char * rgb_img_file,
+BTRFUtil::randomSampleFromRgbdImages(const char * rgb_img_file,
                                      const char * depth_img_file,
                                      const char * camera_pose_file,
                                      const int num_sample,
@@ -27,7 +27,7 @@ BTRNDUtil::randomSampleFromRgbdImages(const char * rgb_img_file,
                                      vector<Eigen::VectorXf> & labels)
 {
     
-    BTRNDUtil::randomSampleFromRgbdImagesImpl(rgb_img_file, depth_img_file, camera_pose_file,
+    BTRFUtil::randomSampleFromRgbdImagesImpl(rgb_img_file, depth_img_file, camera_pose_file,
                                           num_sample, image_index, dataset_param.depth_factor_,
                                           dataset_param.camera_matrix(), dataset_param.min_depth_,
                                           dataset_param.max_depth_, use_depth, verbose, features, labels);
@@ -35,7 +35,7 @@ BTRNDUtil::randomSampleFromRgbdImages(const char * rgb_img_file,
 
 
 void
-BTRNDUtil::randomSampleFromRgbdImagesImpl(const char * rgb_img_file,
+BTRFUtil::randomSampleFromRgbdImagesImpl(const char * rgb_img_file,
                                       const char * depth_img_file,
                                       const char * camera_pose_file,
                                       const int num_sample,
@@ -107,7 +107,7 @@ BTRNDUtil::randomSampleFromRgbdImagesImpl(const char * rgb_img_file,
 }
 
 void
-BTRNDUtil::extractWHFeatureFromRgbImages(const char * rgb_img_file,
+BTRFUtil::extractWHFeatureFromRgbImages(const char * rgb_img_file,
                                         vector<SCRFRandomSample> & features,
                                         const int single_channel_dim,
                                         const bool verbose)

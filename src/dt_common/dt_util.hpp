@@ -25,57 +25,34 @@ using std::vector;
 class DTUtil
 {
 public:
+    // spatial variance objective
     template <class T>
     static double spatialVariance(const vector<T> & labels, const vector<unsigned int> & indices);
     
-    // full variance of Gaussian model
-    template <class T>
-    static double fullVariance(const vector<T>& labels, const vector<unsigned int> & indices);
     
-    template <class MatrixType>
-    static double sumOfVariance(const vector<MatrixType> & labels, const int row_index,
-                                const vector<unsigned int> & indices);
-    
-    template <class Type1, class Type2>
-    static double spatialVariance(const vector<Type1> & labels, const vector<unsigned int> & indices, const vector<Type2> & wt);
-    
+    // mean and standard deviation
     template <class T>
     static void meanStddev(const vector<T> & labels, const vector<unsigned int> & indices, T & mean, T & sigma);
     
+    // mean value of data
+    // mask: index of data
     template <class T>
-    static T mean(const vector<T> & data, const vector<unsigned int> & indices);
+    static T mean(const vector<T> & data,
+                  const vector<unsigned int> & mask);
     
+    // mean value of data
     template <class T>
     static T mean(const vector<T> & data);
     
-    // mean and standard of particular row
-    template <class matrixType, class vectorType>
-    static void rowMeanStddev(const vector<matrixType> & labels, const vector<unsigned int> & indices,
-                              const int row_index, vectorType & mean,   vectorType & sigma);
-    
+    // mean value and median value of errors
+    // median value: each dimension is independently computed
     template <class T>
     static void meanMedianError(const vector<T> & errors, T & mean, T & median);
     
-    // mean error of each row of a list of matrixes
-    template <class MatrixType>
-    static void matrixMeanError(const vector<MatrixType> & errors, MatrixType & mean);
-    
-   
-    static double crossEntropy(const VectorXd & prob);
-    
+    // balance objective
     static double balanceLoss(const int leftNodeSize, const int rightNodeSize);
     
-    static bool isSameLabel(const vector<unsigned int> & labels, const vector<unsigned int> & indices);
-    
-    
-    static Eigen::MatrixXd confusionMatrix(const vector<unsigned int> & predictions,
-                                           const vector<unsigned int> & labels,
-                                           const int category_num,
-                                           bool normalize);
-    
-    // accuracy of each category and average
-    static Eigen::VectorXd accuracyFromConfusionMatrix(const Eigen::MatrixXd & conf);
-    
+    // [start, step, end)
     template <class T>
     static vector<T> range(int start, int end, int step)
     {

@@ -1,15 +1,12 @@
-//
-//  cvxWalshHadamard.h
-//  RGBD_RF
-//
 //  Created by jimmy on 2016-08-28.
 //  Copyright (c) 2016 Nowhere Planet. All rights reserved.
 //
 
-#ifndef __RGBD_RF__cvxWalshHadamard__
-#define __RGBD_RF__cvxWalshHadamard__
+#ifndef __cvx_wht__
+#define __cvx_wht__
 
 // Walsh Hadamard transform (WHT) feature
+
 #include <stdio.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/core/core_c.h>
@@ -58,4 +55,4 @@ private:
     
 };
 
-#endif /* defined(__RGBD_RF__cvxWalshHadamardProjection__) */
+#endif /* defined(__cvx_wht__) */

@@ -58,7 +58,7 @@ bool BTRFForest::predict(const FeatureType & feature,
     return predictions.size() == trees_.size();
 }
 
-const BTRNDTreeParameter & BTRFForest::getTreeParameter(void) const
+const BTRFForest::TreeParameter & BTRFForest::getTreeParameter(void) const
 {
     return tree_param_;
 }

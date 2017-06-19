@@ -1,7 +1,3 @@
-//
-//  main.cpp
-//  LoopClosure
-//
 //  Created by jimmy on 2016-02-16.
 //  Copyright © 2016 jimmy. All rights reserved.
 //
@@ -14,23 +10,26 @@
 #include "cvx_pose_estimation.hpp"
 #include "ms7scenes_util.hpp"
 #include "dataset_param.hpp"
-
+#include "cvx_calib3d.hpp"
 
 using namespace::std;
 
-#if 0
+#if 1
 
 static void help()
 {
-    printf("program  datasetFile   predictionFile sampleNumber inlierThreshold angleThreshold distanceThreshold saveFilePrefix           \n");
-    printf("BT_Pose  dataset.txt   result/*.txt   500          0.1             5              0.05              estimaged_poses/camera \n");
-    printf("predictionFile: predicted 3D location files\n");
+    printf("program    datasetFile   predictions  sampleNumber inlierThreshold rotation translation saveFilePrefix           \n");
+    printf("BTRF_Pose  dataset.txt   result/*.txt 500          0.1             5        0.05        estimaged_poses/camera \n");
+    printf("Estimate camera pose using preemptive RANSAC and Kabsch. \n");
+    printf("Output: percenrage of current camera poses, and median rotation, translation errors.\n");
+    printf("datasetFile: dataset parameter, for example focal length. \n");
+    printf("predictions: predicted 3D location files\n");
     printf("sampleNumber: sample numbers in each RANSAC.\n");
-    printf("inlierThreshold: 3D location inlier threshold, in meter\n");
-    printf("angleThreshold: degree\n");
-    printf("distanceThreshold: meter \n");
-    printf("saveFile: camera pose error. (degree, meter). \n");
-    printf("The dataset could fit 7Scenes/TUM with 7Scenes/TUM dataset_param_7Scenes.txt/dataset_param_TUM.txt \n");
+    printf("inlierThreshold: 3D location reprojection error threshold, unit meter. A parameter in RANSAC.\n");
+    printf("rotation: rotation error metric, unit degree   \n");
+    printf("translation: translation error metric, unit meter \n");
+    printf("saveFilePrefix: camera pose error. (degree, meter). \n");
+    
 }
 
 int main(int argc, const char * argv[])
@@ -44,14 +43,16 @@ int main(int argc, const char * argv[])
     const char * dataset_param_filename = argv[1];
     const char *prediction_folder        = argv[2];
     const int sample_num = (int)strtod(argv[3], NULL);
-    const double inlierThreshold = strtod(argv[4], NULL);
-    const double angleThreshold    = strtod(argv[5], NULL);
-    const double distanceThreshold = strtod(argv[6], NULL);
+    const double inlier_threshold = strtod(argv[4], NULL);
+    const double angle_threshold    = strtod(argv[5], NULL);
+    const double distance_threshold = strtod(argv[6], NULL);
     const char *prefix = argv[7];
     
+    // read dataset parameter
     DatasetParameter dataset_param;
     dataset_param.readFromFileDataParameter(dataset_param_filename);
  
+    // read prediction files
     vector<string> files = CvxIO::read_files(prediction_folder);
     assert(files.size() > 0);
     
@@ -73,12 +74,18 @@ int main(int argc, const char * argv[])
         string cur_file = files[k];
         string rgb_img_file, depth_img_file, camera_pose_file;
         
+        // Step 1: load predictions
         vector<cv::Point2d> img_pts;
         vector<cv::Point3d> wld_pts_gt;
         vector< vector<cv::Point3d> > wld_pts_pred_candidate;
         vector< vector<double > > candidate_feature_dists;
-        bool is_read = Ms7ScenesUtil::load_prediction_result_with_distance(cur_file.c_str(), rgb_img_file, depth_img_file, camera_pose_file,
-                                                                        img_pts, wld_pts_gt, wld_pts_pred_candidate, candidate_feature_dists);
+        bool is_read = Ms7ScenesUtil::load_prediction_result_with_distance(cur_file.c_str(),
+                                                                           rgb_img_file,
+                                                                           depth_img_file,
+                                                                           camera_pose_file,
+                                                                           img_pts, wld_pts_gt,
+                                                                           wld_pts_pred_candidate,
+                                                                           candidate_feature_dists);
         
         assert(is_read);
         rgb_img_files.push_back(rgb_img_file);
@@ -86,14 +93,14 @@ int main(int argc, const char * argv[])
         camera_pose_files.push_back(camera_pose_file);
         
        
+        // Step 2: load depth image and ground truth camera pose (for comparison only)
         cv::Mat depth_img;
         CvxIO::imread_depth_16bit_to_64f(depth_img_file.c_str(), depth_img);
-        
         cv::Mat camera_to_world_pose = Ms7ScenesUtil::read_pose_7_scenes(camera_pose_file.c_str());
         
         cv::Mat mask;
         cv::Mat camera_coordinate_position;
-        cv::Mat wld_coord = CvxCalib3D::cameraDepthToWorldCoordinate(depth_img,
+        CvxCalib3D::cameraDepthToWorldCoordinate(depth_img,
                                                             camera_to_world_pose,
                                                             calibration_matrix,
                                                             depth_factor,
@@ -102,7 +109,7 @@ int main(int argc, const char * argv[])
                                                             camera_coordinate_position,
                                                             mask);
         
-        // 2D location to 3D camera coordiante location*
+        // 2D pixel location to 3D camera coordiante location
         vector<vector<cv::Point3d> > valid_wld_pts_candidate;
         vector<cv::Point3d> valid_camera_pts;
         for(int i = 0; i<img_pts.size(); i++) {
@@ -116,6 +123,7 @@ int main(int argc, const char * argv[])
         }
         
         cv::Mat estimated_camera_pose = cv::Mat::eye(4, 4, CV_64F);
+        // Too few predictions
         if (valid_camera_pts.size() < 20) {
             angle_errors.push_back(180.0);
             translation_errors.push_back(10.0);
@@ -123,22 +131,27 @@ int main(int argc, const char * argv[])
             continue;
         }
         
-        // estimate camera pose using Kabsch
+        // Step 3: estimate camera pose using Kabsch
         PreemptiveRANSAC3DParameter param;
-        param.dis_threshold_ = inlierThreshold;
+        param.dis_threshold_ = inlier_threshold;
         param.sample_number_ = sample_num;
-        bool isEstimated = CvxPoseEstimation::preemptiveRANSAC3DOneToMany(valid_camera_pts, valid_wld_pts_candidate, param, estimated_camera_pose);
+        bool isEstimated = CvxPoseEstimation::preemptiveRANSAC3DOneToMany(valid_camera_pts,
+                                                                          valid_wld_pts_candidate,
+                                                                          param,
+                                                                          estimated_camera_pose);
         if (isEstimated) {
-            double angle_dis = 0.0;
-            double location_dis = 0.0;
+            // measure rotation and translation errors
+            double rotation_error = 0.0;
+            double translation_error = 0.0;
             cv::Mat gt_pose = Ms7ScenesUtil::read_pose_7_scenes(camera_pose_file.c_str());
-            CvxPoseEstimation::poseDistance(gt_pose, estimated_camera_pose, angle_dis, location_dis);
-            angle_errors.push_back(angle_dis);
-            translation_errors.push_back(location_dis);
-            printf("angle distance, location distance are %lf %lf\n", angle_dis, location_dis);
+            CvxPoseEstimation::poseDistance(gt_pose, estimated_camera_pose, rotation_error, translation_error);
+            angle_errors.push_back(rotation_error);
+            translation_errors.push_back(translation_error);
+            printf("angle distance, location distance are %lf %lf\n", rotation_error, translation_error);
         }
         else
         {
+            // arbitrary large errors
             angle_errors.push_back(180.0);
             translation_errors.push_back(10.0);
         }
@@ -148,34 +161,44 @@ int main(int argc, const char * argv[])
             // number of cameras inside threshold
             int num_small_error_cameras = 0;
             for (int i = 0; i<angle_errors.size(); i++) {
-                if (angle_errors[i] < angleThreshold && translation_errors[i] < distanceThreshold) {
+                if (angle_errors[i] < angle_threshold && translation_errors[i] < distance_threshold) {
                     num_small_error_cameras++;
                 }
             }
-            printf("--------------------------camera number %lu, good pose percentage is %lf, threshold(%lf %lf)-------------------\n", angle_errors.size(),
-                   1.0 * num_small_error_cameras/angle_errors.size(), angleThreshold, distanceThreshold);
+            printf("--------------------------camera number %lu, correct pose percentage is %lf, threshold(%lf %lf)-------------------\n",
+                   angle_errors.size(),
+                   1.0 * num_small_error_cameras/angle_errors.size(),
+                   angle_threshold,
+                   distance_threshold);
         }
     }
     assert(angle_errors.size() == translation_errors.size());
     assert(angle_errors.size() == files.size());
     
-    // number of cameras inside threshold
-    int num_small_error_cameras = 0;
+    // statistic of prediction error
+    // number of correct cameras
+    int num_correct_camera = 0;
     for (int i = 0; i<angle_errors.size(); i++) {
-        if (angle_errors[i] < angleThreshold && translation_errors[i] < distanceThreshold) {
-            num_small_error_cameras++;
+        if (angle_errors[i] < angle_threshold && translation_errors[i] < distance_threshold) {
+            num_correct_camera++;
         }
     }
-    printf("good pose estimation percentage is %lf, threshold(%lf %lf)\n", 1.0 * num_small_error_cameras/angle_errors.size(), angleThreshold, distanceThreshold);
+    printf("correct pose estimation percentage is %lf, threshold(%lf %lf)\n",
+           1.0 * num_correct_camera/angle_errors.size(),
+           angle_threshold, distance_threshold);
     
     std::sort(angle_errors.begin(), angle_errors.end());
     std::sort(translation_errors.begin(), translation_errors.end());
-    printf("median angle error: %lf, translation error: %lf\n", angle_errors[angle_errors.size()/2], translation_errors[translation_errors.size()/2]);
+    printf("median angle error: %lf, translation error: %lf\n",
+           angle_errors[angle_errors.size()/2],
+           translation_errors[translation_errors.size()/2]);
     
     assert(estimated_poses.size() == files.size());
     assert(estimated_poses.size() == rgb_img_files.size());
     assert(estimated_poses.size() == depth_img_files.size());
     assert(estimated_poses.size() == camera_pose_files.size());
+    
+    // save predicted cameras
     for (int k = 0; k<estimated_poses.size(); k++) {
         char save_file[1024] = {NULL};
         sprintf(save_file, "%s_%06d.txt", prefix, k);

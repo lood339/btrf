@@ -1,7 +1,3 @@
-//
-//  bt_rnd_regressor.h
-//  RGBD_RF
-//
 //  Created by jimmy on 2017-01-21.
 //  Copyright (c) 2017 Nowhere Planet. All rights reserved.
 //

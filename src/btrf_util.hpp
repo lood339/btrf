@@ -7,7 +7,7 @@
 
 #include "btrf_param.hpp"
 
-class BTRNDUtil
+class BTRFUtil
 {
 public:
     
@@ -42,7 +42,6 @@ public:
     
 private:
     // implementation of randomSampleFromRgbdImages
-   
     static void
     randomSampleFromRgbdImagesImpl(const char * rgb_img_file,
                                    const char * depth_img_file,

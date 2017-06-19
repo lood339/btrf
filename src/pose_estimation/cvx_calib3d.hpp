@@ -21,24 +21,24 @@ using std::vector;
 
 class CvxCalib3D
 {
-public:    
-    static void rigidTransform(const vector<cv::Point3d> & src, const cv::Mat & affine, vector<cv::Point3d> & dst);
+public:
+    // rigid transform from source point (src) to destination point (dst)
+    // affine: 3 x 4 matrix
+    static void rigidTransform(const vector<cv::Point3d> & src,
+                               const cv::Mat & affine,
+                               vector<cv::Point3d> & dst);
     
-        
-    static void KabschTransform(const vector<cv::Point3d> & src, const vector<cv::Point3d> & dst, cv::Mat & affine);
+    // estimate a 3 x 4 rigid transfrom from src to dst
+    static void KabschTransform(const vector<cv::Point3d> & src,
+                                const vector<cv::Point3d> & dst,
+                                cv::Mat & affine);
     
+    // estimate a 3 x 4 rigid transfrom from src to dst
     static Eigen::Affine3d KabschTransform(const vector<Eigen::Vector3d> & src, const vector<Eigen::Vector3d> & dst);
     
     
-    // camera transform from both point-point pairs, and line segment end point pairs
-    static void KabschTransform(const vector<cv::Point3d> & src, const vector<cv::Point3d> & dst,
-                                const vector<cv::Point3d> & line_end_src, const vector<cv::Point3d> & line_end_dst,
-                                cv::Mat & affine);
-    
-       
-    
-        
-    
+    // calculate locations in camera coordinates and world coordinates using
+    // camera pose (e.g., ground truth) and depth image
     // camera_depth_img: CV_64FC1
     // camera_to_world_pose: 4x4 CV_64FC1
     // calibration_matrix: 3x3 CV_64FC1

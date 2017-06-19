@@ -15,7 +15,7 @@
 using std::cout;
 using std::endl;
 
-void BTRFForestBuilder::setTreeParameter(const BTRNDTreeParameter & param)
+void BTRFForestBuilder::setTreeParameter(const TreeParameter & param)
 {
     tree_param_ = param;
 }
@@ -131,12 +131,12 @@ bool BTRFForestBuilder::buildModel(BTRFForest& model,
             CvxIO::imread_rgb_8u(rgb_img_file, rgb_img);
             vector<FeatureType> cur_features;
             vector<Eigen::VectorXf> cur_labels;            
-            BTRNDUtil::randomSampleFromRgbdImages(rgb_img_file, depth_img_file, pose_file,
+            BTRFUtil::randomSampleFromRgbdImages(rgb_img_file, depth_img_file, pose_file,
                                                   sample_per_frame, j, dataset_param_,
                                                   is_use_depth, false,
                                                   cur_features, cur_labels);
             // add WHT feature
-            BTRNDUtil::extractWHFeatureFromRgbImages(rgb_img_file, cur_features, wh_single_dim, false);
+            BTRFUtil::extractWHFeatureFromRgbImages(rgb_img_file, cur_features, wh_single_dim, false);
             
             features.insert(features.end(), cur_features.begin(), cur_features.end());
             labels.insert(labels.end(), cur_labels.begin(), cur_labels.end());
@@ -241,11 +241,11 @@ bool BTRFForestBuilder::estimateValidataionError(const TreeType & tree,
         CvxIO::imread_rgb_8u(rgb_img_file, rgb_img);
         vector<FeatureType> cur_features;
         vector<Eigen::VectorXf> cur_labels;
-        BTRNDUtil::randomSampleFromRgbdImages(rgb_img_file, depth_img_file, pose_file,
+        BTRFUtil::randomSampleFromRgbdImages(rgb_img_file, depth_img_file, pose_file,
                                               sample_per_frame, i, dataset_param_,
                                               is_use_depth, false,
                                               cur_features, cur_labels);
-        BTRNDUtil::extractWHFeatureFromRgbImages(rgb_img_file, cur_features, wh_single_dim, false);
+        BTRFUtil::extractWHFeatureFromRgbImages(rgb_img_file, cur_features, wh_single_dim, false);
         
         
         // test on each frame

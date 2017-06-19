@@ -35,7 +35,7 @@ bool BTRFTree::buildTree(const vector<FeatureType> & features,
                           const vector<VectorXf> & labels,
                           const vector<unsigned int> & indices,
                           const vector<cv::Mat> & rgb_images,
-                          const BTRNDTreeParameter & param)
+                          const TreeParameter & param)
 {
     
     assert(indices.size() <= features.size());

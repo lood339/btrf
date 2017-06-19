@@ -18,16 +18,22 @@ using std::string;
 
 static void help()
 {
-    printf("program       datasetParam      RGBImageList  depthImageList cameraPoseList dtParameterFile  maxCheck saveFile\n");
-    printf("BT_RND_train  dataset_4scenes   rgbs.txt      depth.txt      poses.txt      RF_param.txt     32       bt_rgbd_RF.txt\n");
-    printf("parameter fits to corresponding dataset to datasetParam \n");
-    printf("dtParameterFile: decision tree parameter.\n");
+    printf("program     dataset       RGBImageList  depthImageList cameraPoseList forestParameter  maxCheck saveFile\n");
+    printf("BTRF_train  4scenes.txt   rgbs.txt      depth.txt      poses.txt      RF_param.txt     16       btrf_model.txt\n");
+    printf("dataset: dataset parameter, for example focal length \n");
+    printf("RGBImageList  : a list of RGB images\n");
+    printf("depthImageList: a list of depth images\n");
+    printf("cameraPoseList: a list of camera pose file. (see files in example)\n");
+    printf("forestParameter: random forest parameter.\n");
+    printf("maxCheck: back tracking number, show validation error. Has no-influence of trained model.\n");
+    printf("        : validation error should be smaller enough so that the model fits data well.\n");
+    printf("saveFile: model file.\n");
 }
 
 int main(int argc, const char * argv[])
 {
     if (argc != 8) {
-        printf("argc is %d, should be 8 \n", argc);
+        printf("parameter number is %d, should be: %d \n", argc-1, 8-1);
         help();
         return -1;
     }
@@ -40,18 +46,19 @@ int main(int argc, const char * argv[])
     const int max_check = strtod(argv[6], NULL);
     const char * save_model_file = argv[7];
     
+    // read data set parameter
     DatasetParameter dataset_param;
     dataset_param.readFromFileDataParameter(dataset_param_filename);
     
+    // read training files, make sure RGB, depth image and camera poses are aligned
     vector<string> rgb_files   = CvxIO::read_file_names(rgb_image_file);
     vector<string> depth_files = CvxIO::read_file_names(depth_image_file);
     vector<string> pose_files  = CvxIO::read_file_names(camera_to_wld_pose_file);
     assert(rgb_files.size() == depth_files.size());
     assert(rgb_files.size() == pose_files.size());
-
     
     // read from tree parameter
-    BTRNDTreeParameter tree_param;
+    BTRFTreeParameter tree_param;
     bool is_read = tree_param.readFromFile(tree_param_file);
     assert(is_read);
     if (tree_param.is_use_depth_) {
