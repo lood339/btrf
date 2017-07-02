@@ -11,7 +11,13 @@
 
 using std::vector;
 
-// a random forests
+/*
+ This the random forest
+ The main function is "predict" that predict 3D location using
+ random feature and local descriptors, such as WHT feature
+ The forest is trained from "BTRFForestBuilder"
+ */
+
 class BTRFForest
 {
     friend class BTRFForestBuilder;   
@@ -44,7 +50,7 @@ public:
     
     const TreeParameter & getTreeParameter(void) const;
     const DatasetParameter & getDatasetParameter(void) const;
-    const TreePtr getTree(int index) const;
+    
     
     
     // save model to a .txt file

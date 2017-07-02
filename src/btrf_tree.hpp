@@ -18,13 +18,28 @@
 
 #include "btrf_util.hpp"
 #include "dt_random.hpp"
+#include "btrf_tree_node.hpp"
 
 
 using std::vector;
 using Eigen::VectorXf;
 using flann::BranchStruct;
 
-class BTRFTreeNode;
+/*
+ This the decision tree that supports backtracking.
+ The main functions are "buildTree" and "predict".
+ 
+ The "buildTree" function builds a tree by recursively spliting
+ (feature, label) pairs into left and right sub-trees.
+ The process is controlled by "TreeParameter".
+ 
+ The "predict" function predicts a 3D location using "feature".
+ It searches the tree using random features and local patch 
+ descriptors. The search speed is controlled by "max_check".
+ 
+ */
+
+
 
 class BTRFTree
 {

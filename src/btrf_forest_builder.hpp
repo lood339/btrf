@@ -9,6 +9,17 @@
 #include "btrf_forest.hpp"
 #include "btrf_util.hpp"
 
+/*
+Train a random forest
+Example:
+ BTRFForestBuilder builder;
+ Forest model; // this the training result
+ builder.setTreeParameter(...);
+ builder.setDatasetParameter(...);
+ builder.buildModel(model, ...);
+ model.saveModel('model.txt'); // save the training result 
+*/
+
 class BTRFForestBuilder
 {
     typedef BTRFForest Forest;

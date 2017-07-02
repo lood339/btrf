@@ -67,11 +67,6 @@ const DatasetParameter & BTRFForest::getDatasetParameter(void) const
 {
     return dataset_param_;
 }
-const BTRFForest::TreePtr BTRFForest::getTree(int index) const
-{
-    assert(index >=0 && index < trees_.size());
-    return trees_[index];
-}
 
 bool BTRFForest::saveModel(const char *file_name) const
 {

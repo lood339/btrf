@@ -15,6 +15,14 @@
 using std::vector;
 using Eigen::VectorXf;
 
+/*
+ This the tree node structure.
+ The node has two types: one is internal (non-leaf) node  
+ and another is leaf node.
+ non-leaf node has split paramters 
+ leaf node has label distribution and local patch descriptors
+ The local patch descriptor is a vector with fixed length. 
+ */
 
 class BTRFTreeNode
 {
