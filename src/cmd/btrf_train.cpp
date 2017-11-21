@@ -14,7 +14,7 @@
 
 using std::string;
 
-#if 0
+#if 1
 
 static void help()
 {

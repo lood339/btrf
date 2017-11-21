@@ -1,0 +1,215 @@
+The API of the Walsh-Hadamard pattern matching utility
+======================================================
+
+Introduction
+------------
+This utility performs fast pattern matching using projection on
+Walsh-Hadamard kernels.
+
+The inputs are a source image (of any size) and a pattern image. The pattern
+must be square with an edge of 2^n, up to a size of 128x128 (note that
+sizes of more than 32x32 require changing some compilation flags in wh.h).
+
+The output is a list of matches, where each match contains information on the
+location of the match in the source image and the euclidean distance of
+the match from the pattern.
+
+
+Installation:
+-------------
+Just put the .c & .h files in the same folder and compile - there is no need
+for any special makefile. Since running time is important here, it is
+recommended to compile with the maximum speed flag.
+
+Windows users can use the supplied static library WHPatternMatching.lib,
+instead of compiling the source code themselves.
+
+This package doesn't include any libraries for loading, saving & displaying
+images. Since image data is needed as input, the user should provide his own
+image libraries.
+
+
+Process outline:
+----------------
+
+ 1) Create a WHSetup, defining the sizes of the source image and the pattern,
+    and the required amount of WH kernels to project the image on.
+
+ 2) Create Image structs that will hold the source & pattern images.
+
+ 3) Notify the WHSetup on the desired source and pattern images.
+
+ 4) Perform the pattern matching on the WHSetup with the desired threshold.
+
+ 5) Retrieve the results from the WHSetup.
+
+ 6) To perform another pattern matching with a different threshold, go back
+    to step 4.
+	To perform another pattern matching with different source or pattern
+	images of the same size as declared in the setup creation, go back to
+	step 2 (only the new image/pattern needs to be created and notified this
+	time). 
+	To perform another pattern matching with different source or pattern
+	images of a different size than the size that was declared in the setup
+	creation, go back to step 1.
+
+ 7) When finished, destroy all the WHSetups that were created.
+
+
+Setup creation:
+---------------
+WalshSetup * createWalshSetup(coordT sourceRows, coordT sourceCols,
+							  coordT patternRows, basisT numOfBasis)
+
+Creates and returns a WHSetup that supports source matrices of size
+(sourceRows,sourceCols), patterns of size (patternRows, patternRows) and
+the given number of WH kernels to be used for projection.
+
+
+Image creation:
+---------------
+Image *createImage(pixelT *pixels, coordT rows, coordT cols)
+
+Creates and returns an Image of the given size, with the given pixels array.
+Each pixel is an 8-bit gray level value, and the array should be in rows
+order, i.e. the top row from left to right, then the second row from left to
+right, etc.
+
+
+Specifying a source image:
+--------------------------
+void setSourceImage(WHSetup *setup, Image *source)
+
+Notifies the setup on the given source image. The image must be of the size
+that was declared in the creation of the setup. As long as the source image
+is of the declared size, there is no need to create new setups, and the same
+setup can be used for many source images.
+
+
+Specifying a pattern image:
+--------------------------
+void setPatternImage(WHSetup *setup, Image *pattern)
+
+Notifies the setup on the given pattern image. The pattern must be of the size
+that was declared in the creation of the setup. As with the source image, as
+long as the pattern image is of the declared size, there is no need to create
+new setups, and the same setup can be used for many patterns.
+
+
+Pattern Matching:
+-----------------
+void whPatternMatch(WHSetup *setup, distanceT rejectThresh)
+
+Performs pattern matching on the given setup. The given rejectThresh specifies
+the maximum mean difference (in pixels) between the pattern and a match. After
+the execution of this function, the resulting matches list and the number of
+matches that were found are available in the setup.
+The pattern matching process is done using three methods, in this order:
+Top Down - the whole image is projected on the WH kernels, starting with
+           the lowest frequency kernel. Each such projection rejects some
+           of the suspected windows. After each projection, the percentage
+           of remaining suspected windows is measured.
+Bottom Up - when the percentage of suspected windows goes under a certain
+            margin, the Top Down method is replaced by Bottom Up. In this
+            method, only the remaining suspected windows are projected,
+            instead of the whole image. Here as well, each projection
+            rejects some more suspected windows, reducing the percentage
+ 		    of remaining windows. The percentage margin for moving to
+            Bottom Up is initially 10%, and it can be changed using the
+            setMethodStartPercent() function.
+Direct Distance - when the percentage of suspected windows goes under
+                  a second margin, the Bottom Up method is replaced by
+                  Direct Distance. In this method, the Eculidean distance
+                  between each of the remaining suspected windows and the
+                  pattern is computed, enabling the final rejection of
+                  all the windows with distance above the threshold. The
+			      percentage margin for moving to Direct Distance is
+			      initially 2%, and it can be changed using the
+                  setMethodStartPercent() function.
+
+
+Specifying the pattern matching method percentage:
+--------------------------------------------------
+void setMethodStartPercent(WHSetup *setup, float bottomUpStartPercent,
+						   float distanceStartPercent)
+
+Notifies the setup on the percentage that should be used for determining the
+switching between the pattern matching methods. When the percentage of
+suspected windows goes below bottomUpStartPercent, the method changes from
+Top Down to Bottom Up. When the percentage of suspected windows goes below
+distanceStartPercent, the method changes from Bottom Up to Direct Distance.
+The default values of bottomUpStartPercent & distanceStartPercent are 10% and
+2% respectively. This function should be called only if the user wants to
+changes these default values. such a change may be done in order to optimize
+the running time of the pattern matching process on different computation
+platforms.
+
+
+Retrieving the number of matches:
+---------------------------------
+int numOfMatches(WHSetup *setup)
+
+Returns the number of matches that were found in the last pattern matching.
+
+
+Retrieving the matches list:
+----------------------------
+Match * matches(WHSetup *setup)
+
+Returns the array of Matches that were found in the last pattern matching.
+Each Match contains the location of the match in the source image and the
+Euclidean distance of the match from the pattern. The following macros can be
+used to access the Match:
+    matchY(Match *match), matchX(Match *match), matchDistance(Match *match).
+
+
+Destroying a setup:
+-------------------
+void destroyWHSetup(WHSetup *setup)
+
+Destroys the given WHSetup. Should be performed when no more pattern matching
+is required on this setup.
+
+
+Pattern Matching code Example:
+------------------------------
+
+Assume the contents of the following variables:
+  pixelT *sourcePixels  - the source image data (in rows order)
+  coordT sourceRows     - the number of rows in the source image
+  coordT sourceCols     - the number of columns in the source image
+  pixelT *patternPixels - the pattern image data (in rows order)
+  coordT patternRows    - the number of rows in the pattern image
+
+The following program searches for the pattern in the source image
+with a threshold of 10 pixels, and prints the results. Up to 50
+Walsh-Hadamard kernels will be used for projections:
+
+  WalshSetup *setup = createWalshSetup(sourceRows, sourceCols, patternRows, 50);
+
+  Image *source = createImage(sourcePixels, sourceRows, sourceCols);
+  Image *pattern = createImage(patternPixels, patternRows, patternRows);
+
+  Match *match;
+  int count;
+
+  setSourceImage(setup, source);
+  setPatternImage(setup, pattern);
+
+  whPatternMatch(setup, 10);		
+
+  count = numOfMatches(setup);
+  match = matches(setup);
+
+  printf("%d matches were found:\n", count);
+
+  while (count--) {
+      printf("y=%d x=%d distance=%d\n", matchY(match), matchX(match),
+ 	         matchDistance(match));
+      match++;
+  }
+
+  destroyWalshSetup(setup);
+
+  destroyImage(source);
+  destroyImage(pattern);
