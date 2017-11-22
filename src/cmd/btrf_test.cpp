@@ -13,8 +13,6 @@
 
 using std::string;
 
-#if 0
-
 static void help()
 {
     printf("program   modelFile  RGBImageList depthImageList cameraPoseList numSample maxCheck saveFilePrefix\n");
@@ -160,4 +158,3 @@ int main(int argc, const char * argv[])
     return 0;
 }
 
-#endif

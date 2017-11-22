@@ -14,8 +14,6 @@
 
 using std::string;
 
-#if 1
-
 static void help()
 {
     printf("program     dataset       RGBImageList  depthImageList cameraPoseList forestParameter  maxCheck saveFile\n");
@@ -82,6 +80,4 @@ int main(int argc, const char * argv[])
     
     return 0;
 }
-
-#endif
 

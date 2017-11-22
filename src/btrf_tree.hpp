@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <algorithm>
 // flann
+#include <functional>
 #include <flann/util/heap.h>
 #include <flann/util/result_set.h>
 #include <flann/flann.hpp>
