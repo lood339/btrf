@@ -14,8 +14,6 @@
 
 using namespace::std;
 
-#if 0
-
 static void help()
 {
     printf("program    datasetFile   predictions  sampleNumber inlierThreshold rotation translation saveFilePrefix           \n");
@@ -221,4 +219,3 @@ int main(int argc, const char * argv[])
     return 0;
 }
 
-#endif

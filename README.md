@@ -36,6 +36,10 @@ parameters/4scenes_param.txt: dataset parameter, from http://graphics.stanford.e
 parameters/forest_param.txt: forest parameter example. 
 parameters/apt1_kitchen/  : training/testing file sequence examples 
 
-Todo: cmake file
+How to build with cmake:
 
+    mkdir build
+    cd build
+    cmake ../src
+    make -j4
 
